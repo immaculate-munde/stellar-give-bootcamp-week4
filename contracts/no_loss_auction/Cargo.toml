@@ -1,0 +1,17 @@
+[package]
+name = "no_loss_auction"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["lib", "cdylib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+sep-41-token = "1.4.0"
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
+sep-41-token = { version = "1.4.0", features = ["testutils"] }

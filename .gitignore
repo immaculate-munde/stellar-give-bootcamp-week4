@@ -1,0 +1,23 @@
+# Rust's output directory
+target
+
+# Local settings
+.soroban
+.stellar
+
+# Node
+node_modules
+frontend/.next
+frontend/out
+packages/no_loss_auction/dist
+
+# Env
+.env
+.env.local
+frontend/.env.local
+
+# Test snapshots
+test_snapshots
+
+# OS
+.DS_Store

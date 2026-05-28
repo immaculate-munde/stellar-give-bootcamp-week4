@@ -1,0 +1,11 @@
+[development]
+network = "testnet"
+rpc_url = "https://soroban-testnet.stellar.org"
+network_passphrase = "Test SDF Network ; September 2015"
+contract_id = "CDRIREBGHCOS3YU6KMFGXLLBOXCWMYXX2VQ7AYX2G5YBWVPNJ7SHHFHJ"
+
+[testnet]
+network = "testnet"
+rpc_url = "https://soroban-testnet.stellar.org"
+network_passphrase = "Test SDF Network ; September 2015"
+contract_id = "CDRIREBGHCOS3YU6KMFGXLLBOXCWMYXX2VQ7AYX2G5YBWVPNJ7SHHFHJ"
