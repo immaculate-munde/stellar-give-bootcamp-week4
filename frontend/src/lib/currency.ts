@@ -82,6 +82,31 @@ export function convertLocalToXlm(
   return amount / rate;
 }
 
+export function convertXlmToLocal(
+  xlm: number,
+  currency: FiatCurrency,
+  rates: Partial<Record<FiatCurrency, number>>,
+): number | null {
+  if (xlm <= 0) return null;
+  if (currency === "XLM") return xlm;
+
+  const rate = getRateForCurrency(currency, rates);
+  if (!rate) return null;
+
+  return xlm * rate;
+}
+
+export function formatFiatAmount(
+  amount: number | null,
+  currency: FiatCurrency,
+): string {
+  if (amount === null) return "—";
+
+  return amount.toLocaleString(undefined, {
+    maximumFractionDigits: currency === "XLM" ? 7 : 2,
+  });
+}
+
 export function formatXlmEquivalent(xlm: number | null): string {
   if (xlm === null) return "—";
   if (xlm < 0.0000001) return "< 0.0000001";

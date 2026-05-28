@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AuctionView,
   cancelAuction,
@@ -12,6 +12,15 @@ import {
   placeBid,
   TOKEN_DECIMALS,
 } from "@/lib/auction";
+import {
+  CURRENCY_OPTIONS,
+  FiatCurrency,
+  convertLocalToXlm,
+  convertXlmToLocal,
+  fetchXlmRates,
+  formatFiatAmount,
+  formatXlmEquivalent,
+} from "@/lib/currency";
 import {
   auctionStatusLabel,
   formatTokenAmount,
@@ -23,6 +32,10 @@ import { formatError } from "@/lib/errors";
 import { useWallet } from "@/lib/wallet";
 import { CountdownTimer } from "./CountdownTimer";
 
+function stroopsToXlm(stroops: bigint): number {
+  return Number(stroops) / 10 ** TOKEN_DECIMALS;
+}
+
 export function AuctionDetailView({
   auction,
   onRefresh,
@@ -32,6 +45,11 @@ export function AuctionDetailView({
 }) {
   const { address, connect, signAndSend } = useWallet();
   const [bidAmount, setBidAmount] = useState("");
+  const [bidCurrency, setBidCurrency] = useState<FiatCurrency>("KES");
+  const [rates, setRates] = useState<Partial<Record<FiatCurrency, number>>>({
+    XLM: 1,
+  });
+  const [ratesLoading, setRatesLoading] = useState(true);
   const [pendingRefund, setPendingRefund] = useState(0n);
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -42,10 +60,36 @@ export function AuctionDetailView({
     BigInt(Math.floor(Date.now() / 1000)) >= auction.endTime;
   const minNextBid =
     auction.highestBid > 0n ? auction.highestBid + 1n : auction.minBid;
+  const currentBidStroops =
+    auction.highestBid > 0n ? auction.highestBid : auction.minBid;
+
+  const minNextBidXlm = stroopsToXlm(minNextBid);
+  const currentBidXlm = stroopsToXlm(currentBidStroops);
+  const prizeXlm = stroopsToXlm(auction.prizeAmount);
+
+  const bidXlm = useMemo(
+    () => convertLocalToXlm(bidAmount, bidCurrency, rates),
+    [bidAmount, bidCurrency, rates],
+  );
 
   useEffect(() => {
-    setBidAmount(formatTokenAmount(minNextBid));
-  }, [auction.id, auction.highestBid, auction.minBid]);
+    fetchXlmRates()
+      .then(setRates)
+      .catch(() => undefined)
+      .finally(() => setRatesLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (bidCurrency === "XLM") {
+      setBidAmount(formatTokenAmount(minNextBid));
+      return;
+    }
+
+    const local = convertXlmToLocal(minNextBidXlm, bidCurrency, rates);
+    setBidAmount(
+      local !== null ? local.toFixed(2) : formatTokenAmount(minNextBid),
+    );
+  }, [auction.id, auction.highestBid, auction.minBid, bidCurrency, rates]);
 
   useEffect(() => {
     if (!address) return;
@@ -104,13 +148,48 @@ export function AuctionDetailView({
           <h1 className="font-serif text-4xl text-white md:text-5xl">
             {auction.title}
           </h1>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+              View amounts in
+            </span>
+            <select
+              value={bidCurrency}
+              onChange={(event) =>
+                setBidCurrency(event.target.value as FiatCurrency)
+              }
+              className="border border-cyan/20 bg-navy-card px-3 py-2 text-sm text-white outline-none focus:border-cyan"
+            >
+              {CURRENCY_OPTIONS.map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <p className="mt-6 font-serif text-3xl text-cyan md:text-4xl">
-            {formatTokenAmount(
-              auction.highestBid > 0n ? auction.highestBid : auction.minBid,
-            )}{" "}
+            {formatTokenAmount(currentBidStroops)}{" "}
             <span className="text-lg uppercase tracking-[0.2em] text-cyan-muted">
               current bid
             </span>
+          </p>
+          {!ratesLoading && bidCurrency !== "XLM" && (
+            <p className="mt-2 text-sm text-white/60">
+              ≈ {formatFiatAmount(convertXlmToLocal(currentBidXlm, bidCurrency, rates), bidCurrency)}{" "}
+              {bidCurrency}
+            </p>
+          )}
+          <p className="mt-3 text-sm text-white/60">
+            Prize escrow: {formatTokenAmount(auction.prizeAmount)} XLM
+            {!ratesLoading && bidCurrency !== "XLM" && (
+              <>
+                {" "}
+                (≈{" "}
+                {formatFiatAmount(convertXlmToLocal(prizeXlm, bidCurrency, rates), bidCurrency)}{" "}
+                {bidCurrency})
+              </>
+            )}
           </p>
 
           {auction.highestBidder && (
@@ -147,27 +226,66 @@ export function AuctionDetailView({
           {live && (
             <div className="mt-10 space-y-4">
               <label className="block text-xs uppercase tracking-[0.25em] text-cyan-muted">
-                Your bid amount
+                Your bid ({bidCurrency})
               </label>
-              <input
-                type="number"
-                min={Number(minNextBid) / 10 ** TOKEN_DECIMALS}
-                step="0.0000001"
-                value={bidAmount}
-                onChange={(event) => setBidAmount(event.target.value)}
-                className="w-full border border-cyan/20 bg-navy-card px-4 py-3 text-white outline-none transition focus:border-cyan"
-              />
+              <div className="grid gap-3 sm:grid-cols-[140px_1fr]">
+                <div className="flex items-center border border-cyan/20 bg-navy-card px-4 py-3 text-sm text-cyan-muted">
+                  {bidCurrency}
+                </div>
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={bidAmount}
+                  onChange={(event) => setBidAmount(event.target.value)}
+                  className="border border-cyan/20 bg-navy-card px-4 py-3 text-white outline-none transition focus:border-cyan"
+                />
+              </div>
+              <div className="rounded border border-cyan/15 bg-navy/60 px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.2em] text-cyan-muted">
+                  Pays on-chain (XLM)
+                </p>
+                <p className="mt-2 font-serif text-xl text-cyan">
+                  {ratesLoading && bidCurrency !== "XLM"
+                    ? "Loading rate..."
+                    : `${formatXlmEquivalent(bidXlm)} XLM`}
+                </p>
+              </div>
               <p className="text-xs text-cyan-muted">
-                Minimum bid: {formatTokenAmount(minNextBid)} XLM
-                {auction.highestBid > 0n ? " (must beat the current high bid)" : ""}
+                Minimum: {formatTokenAmount(minNextBid)} XLM
+                {!ratesLoading && bidCurrency !== "XLM" && (
+                  <>
+                    {" "}
+                    (≈{" "}
+                    {formatFiatAmount(
+                      convertXlmToLocal(minNextBidXlm, bidCurrency, rates),
+                      bidCurrency,
+                    )}{" "}
+                    {bidCurrency})
+                  </>
+                )}
+                {auction.highestBid > 0n ? " — must beat the current high bid" : ""}
+              </p>
+              <p className="text-xs text-white/45">
+                Bids settle in XLM on Stellar. Local amounts use live rates and
+                are approximate.
               </p>
               <button
                 type="button"
-                disabled={loading !== null}
+                disabled={loading !== null || ratesLoading}
                 onClick={() => {
-                  const amount = parseTokenAmount(bidAmount, TOKEN_DECIMALS);
+                  if (bidXlm === null) {
+                    setMessage("Enter a valid bid amount");
+                    return;
+                  }
+
+                  const amount = parseTokenAmount(
+                    bidXlm.toFixed(TOKEN_DECIMALS),
+                    TOKEN_DECIMALS,
+                  );
+
                   if (amount <= 0n) {
-                    setMessage("Enter a bid amount in XLM");
+                    setMessage("Enter a bid amount");
                     return;
                   }
                   if (amount < minNextBid) {
