@@ -1,6 +1,8 @@
-# No-Loss Auction Protocol
+# AuctionWithMe — No-Loss Auction Protocol
 
-A decentralized no-loss auction system on **Stellar Soroban** with an integrated **AuctionWithMe** frontend. Bidders use SEP-41 tokens; outbid participants are refunded automatically with a manual `claim_refund` fallback.
+**AuctionWithMe** is a decentralized no-loss auction dApp on **Stellar Soroban**. List items, bid with XLM, and get auto-refunded if outbid. This repo contains the Soroban smart contract and the integrated **AuctionWithMe** Next.js frontend.
+
+**Live app:** [auction-with-me.vercel.app](https://auction-with-me.vercel.app)
 
 ## Testnet Contract
 
@@ -21,10 +23,12 @@ A decentralized no-loss auction system on **Stellar Soroban** with an integrated
 - **Finalize auction** — after deadline, distributes bid to seller and prize to winner
 - **Cancel auction** — seller only, only when no bids exist
 
-### Frontend (`frontend/`)
-- AuctionWithMe navy/cyan theme with Munde's Bridals-inspired layouts
+### Frontend — AuctionWithMe (`frontend/`)
+- Navy/cyan theme with luxury-inspired layouts
 - Home hero, asymmetric auction grid, single-item product page
-- Freighter wallet integration
+- Multi-wallet support (Freighter, Albedo, xBull, LOBSTR, and more)
+- Wallet login only — no email sign-up; **My Account** dashboard
+- Dark / light mode, FAQ, image upload, fiat-to-XLM conversion on create
 - All contract functions wired: create, bid, claim, finalize, cancel
 
 ## Project structure
@@ -32,7 +36,7 @@ A decentralized no-loss auction system on **Stellar Soroban** with an integrated
 ```
 ├── contracts/no_loss_auction/   # Soroban contract + tests
 ├── packages/no_loss_auction/      # Generated TypeScript bindings
-├── frontend/                    # Next.js 14 app
+├── frontend/                    # AuctionWithMe Next.js app
 ├── scripts/deploy-testnet.sh    # Deploy + regenerate bindings
 └── environments.toml            # Network + contract config
 ```
@@ -42,7 +46,7 @@ A decentralized no-loss auction system on **Stellar Soroban** with an integrated
 - [Rust](https://rustup.rs/) + `wasm32v1-none` target
 - [Stellar CLI](https://developers.stellar.org/docs/tools/developer-tools/cli/stellar-cli) v26+
 - Node.js 18+
-- [Freighter](https://www.freighter.app/) with **Experimental Mode** enabled
+- A Stellar wallet (e.g. [Freighter](https://www.freighter.app/), Albedo, xBull, LOBSTR) on **Testnet**
 
 Install WASM target:
 
@@ -84,7 +88,7 @@ stellar contract bindings typescript \
 cd packages/no_loss_auction && npm install && npm run build
 ```
 
-## Run frontend
+## Run AuctionWithMe locally
 
 ```bash
 cd frontend
@@ -107,9 +111,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Default demo tokens use testnet native XLM SAC: `CBIELTK6YBZJU5UPH73ZZ7RMHWAVP5FM646FGAWL25LETVSEUYEKNMYF`
 
-## Demo flow
+## Demo flow (AuctionWithMe)
 
-1. Connect Freighter on **Testnet**
+1. Open **AuctionWithMe** and connect a Stellar wallet on **Testnet**
 2. Fund account via [Stellar testnet faucet](https://laboratory.stellar.org/#account-creator?network=test)
 3. **Create auction** at `/create` — approve prize token, submit
 4. **Place bid** on `/auctions/[id]` — approve bid token, submit
