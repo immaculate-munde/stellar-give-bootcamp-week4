@@ -1,4 +1,4 @@
-const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_MB = 4;
 
 export async function uploadImage(file: File): Promise<string> {
   if (!file.type.startsWith("image/")) {
@@ -10,22 +10,18 @@ export async function uploadImage(file: File): Promise<string> {
   }
 
   const formData = new FormData();
-  formData.append("reqtype", "fileupload");
-  formData.append("fileToUpload", file);
+  formData.append("file", file);
 
-  const response = await fetch("https://catbox.moe/user/api.php", {
+  const response = await fetch("/api/upload", {
     method: "POST",
     body: formData,
   });
 
-  if (!response.ok) {
-    throw new Error("Image upload failed");
+  const data = (await response.json()) as { url?: string; error?: string };
+
+  if (!response.ok || !data.url) {
+    throw new Error(data.error || "Image upload failed");
   }
 
-  const url = (await response.text()).trim();
-  if (!url.startsWith("http")) {
-    throw new Error(url || "Image upload failed");
-  }
-
-  return url;
+  return data.url;
 }
