@@ -44,6 +44,10 @@ export function AuctionDetailView({
     auction.highestBid > 0n ? auction.highestBid + 1n : auction.minBid;
 
   useEffect(() => {
+    setBidAmount(formatTokenAmount(minNextBid));
+  }, [auction.id, auction.highestBid, auction.minBid]);
+
+  useEffect(() => {
     if (!address) return;
     fetchPendingRefund(auction.id, address)
       .then(setPendingRefund)
@@ -151,23 +155,38 @@ export function AuctionDetailView({
                 step="0.0000001"
                 value={bidAmount}
                 onChange={(event) => setBidAmount(event.target.value)}
-                placeholder={formatTokenAmount(minNextBid)}
                 className="w-full border border-cyan/20 bg-navy-card px-4 py-3 text-white outline-none transition focus:border-cyan"
               />
+              <p className="text-xs text-cyan-muted">
+                Minimum bid: {formatTokenAmount(minNextBid)} XLM
+                {auction.highestBid > 0n ? " (must beat the current high bid)" : ""}
+              </p>
               <button
                 type="button"
                 disabled={loading !== null}
-                onClick={() =>
+                onClick={() => {
+                  const amount = parseTokenAmount(bidAmount, TOKEN_DECIMALS);
+                  if (amount <= 0n) {
+                    setMessage("Enter a bid amount in XLM");
+                    return;
+                  }
+                  if (amount < minNextBid) {
+                    setMessage(
+                      `Bid must be at least ${formatTokenAmount(minNextBid)} XLM`,
+                    );
+                    return;
+                  }
+
                   runAction("Place bid", (wallet) =>
                     placeBid(
                       wallet,
                       auction.id,
-                      parseTokenAmount(bidAmount, TOKEN_DECIMALS),
+                      amount,
                       auction.bidToken,
                       signAndSend,
                     ),
-                  )
-                }
+                  );
+                }}
                 className="btn-primary w-full disabled:opacity-60"
               >
                 {loading === "Place bid" ? "Submitting..." : "Place Bid"}
