@@ -20,6 +20,29 @@ async function uploadToCatbox(file: File): Promise<string | null> {
   return url.startsWith("http") ? url : null;
 }
 
+async function uploadToTmpfiles(file: File): Promise<string | null> {
+  const uploadData = new FormData();
+  uploadData.append("file", file);
+
+  const response = await fetch("https://tmpfiles.org/api/v1/upload", {
+    method: "POST",
+    body: uploadData,
+  });
+
+  if (!response.ok) return null;
+
+  const payload = (await response.json()) as {
+    status?: string;
+    data?: { url?: string };
+  };
+
+  const pageUrl = payload.data?.url?.trim();
+  if (!pageUrl?.startsWith("http")) return null;
+
+  // tmpfiles serves images from /dl/... not the HTML preview page.
+  return pageUrl.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+}
+
 async function uploadTo0x0(file: File): Promise<string | null> {
   const uploadData = new FormData();
   uploadData.append("file", file);
@@ -58,11 +81,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const url = (await uploadToCatbox(file)) ?? (await uploadTo0x0(file));
+    const url =
+      (await uploadToCatbox(file)) ??
+      (await uploadToTmpfiles(file)) ??
+      (await uploadTo0x0(file));
 
     if (!url) {
       return NextResponse.json(
-        { error: "Image upload failed. Try pasting an image URL instead." },
+        {
+          error:
+            "Image upload failed. Paste a direct image URL (ending in .jpg or .png) instead.",
+        },
         { status: 502 },
       );
     }
@@ -70,7 +99,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url });
   } catch {
     return NextResponse.json(
-      { error: "Image upload failed. Try pasting an image URL instead." },
+      {
+        error:
+          "Image upload failed. Paste a direct image URL (ending in .jpg or .png) instead.",
+      },
       { status: 500 },
     );
   }

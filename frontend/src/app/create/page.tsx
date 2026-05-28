@@ -11,6 +11,7 @@ import {
   fetchXlmRates,
   FiatCurrency,
 } from "@/lib/currency";
+import { normalizeImageUrl, validateImageUrl } from "@/lib/imageUrl";
 import { parseTokenAmount } from "@/lib/utils";
 import { useWallet } from "@/lib/wallet";
 import { useRouter } from "next/navigation";
@@ -56,8 +57,10 @@ export default function CreateAuctionPage() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!form.imageUrl.trim()) {
-      setMessage("Please upload an image or provide an image URL");
+    const imageUrl = normalizeImageUrl(form.imageUrl);
+    const imageError = validateImageUrl(imageUrl);
+    if (imageError) {
+      setMessage(imageError);
       return;
     }
 
@@ -102,7 +105,7 @@ export default function CreateAuctionPage() {
           endTime,
           title: form.title,
           description: form.description,
-          imageUrl: form.imageUrl,
+          imageUrl,
         },
         signAndSend,
       );

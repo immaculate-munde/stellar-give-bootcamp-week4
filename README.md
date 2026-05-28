@@ -109,7 +109,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_BID_TOKEN` | SEP-41 token for bids |
 | `NEXT_PUBLIC_PRIZE_TOKEN` | SEP-41 token for prize escrow |
 
-Default demo tokens use testnet native XLM SAC: `CBIELTK6YBZJU5UPH73ZZ7RMHWAVP5FM646FGAWL25LETVSEUYEKNMYF`
+Default demo tokens use testnet native XLM SAC: `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
 
 ## Demo flow (AuctionWithMe)
 

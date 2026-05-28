@@ -1,20 +1,29 @@
-export const CONTRACT_ID =
-  process.env.NEXT_PUBLIC_CONTRACT_ID ??
-  "CDRIREBGHCOS3YU6KMFGXLLBOXCWMYXX2VQ7AYX2G5YBWVPNJ7SHHFHJ";
+function env(name: string, fallback: string): string {
+  const value = process.env[name]?.trim();
+  return value || fallback;
+}
 
-export const RPC_URL =
-  process.env.NEXT_PUBLIC_RPC_URL ?? "https://soroban-testnet.stellar.org";
+/** Testnet native XLM Stellar Asset Contract (SEP-41). */
+export const TESTNET_NATIVE_XLM_SAC =
+  "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
 
-export const NETWORK_PASSPHRASE =
-  process.env.NEXT_PUBLIC_NETWORK_PASSPHRASE ??
-  "Test SDF Network ; September 2015";
+export const CONTRACT_ID = env(
+  "NEXT_PUBLIC_CONTRACT_ID",
+  "CDRIREBGHCOS3YU6KMFGXLLBOXCWMYXX2VQ7AYX2G5YBWVPNJ7SHHFHJ",
+);
 
-export const BID_TOKEN =
-  process.env.NEXT_PUBLIC_BID_TOKEN ??
-  "CBIELTK6YBZJU5UPH73ZZ7RMHWAVP5FM646FGAWL25LETVSEUYEKNMYF";
+export const RPC_URL = env(
+  "NEXT_PUBLIC_RPC_URL",
+  "https://soroban-testnet.stellar.org",
+);
 
-export const PRIZE_TOKEN =
-  process.env.NEXT_PUBLIC_PRIZE_TOKEN ??
-  "CBIELTK6YBZJU5UPH73ZZ7RMHWAVP5FM646FGAWL25LETVSEUYEKNMYF";
+export const NETWORK_PASSPHRASE = env(
+  "NEXT_PUBLIC_NETWORK_PASSPHRASE",
+  "Test SDF Network ; September 2015",
+);
+
+export const BID_TOKEN = env("NEXT_PUBLIC_BID_TOKEN", TESTNET_NATIVE_XLM_SAC);
+
+export const PRIZE_TOKEN = env("NEXT_PUBLIC_PRIZE_TOKEN", TESTNET_NATIVE_XLM_SAC);
 
 export const TOKEN_DECIMALS = 7;

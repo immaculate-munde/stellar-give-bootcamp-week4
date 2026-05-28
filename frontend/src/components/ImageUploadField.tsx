@@ -88,6 +88,10 @@ export function ImageUploadField({ imageUrl, onImageUrlChange }: Props) {
           placeholder="https://example.com/your-item.jpg"
           className="mt-3 w-full border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
         />
+        <p className="mt-2 text-xs text-cyan-muted">
+          Must be a direct image link (.jpg, .png, .webp). Google share links
+          will not work — right-click the photo and copy the image address.
+        </p>
       </label>
 
       {error && <p className="text-sm text-red-300">{error}</p>}
