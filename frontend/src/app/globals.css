@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0b1120;
+  --foreground: #e8f4ff;
+  --accent: #66c2ff;
+  --accent-muted: rgba(102, 194, 255, 0.6);
+  --card: #111827;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100vh;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center bg-cyan px-8 py-3 text-sm font-medium uppercase tracking-[0.2em] text-navy transition hover:bg-cyan-bright;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center border border-cyan/60 px-8 py-3 text-sm font-medium uppercase tracking-[0.2em] text-cyan transition hover:border-cyan hover:bg-cyan/10;
+  }
+
+  .section-label {
+    @apply text-xs uppercase tracking-[0.35em] text-cyan-muted;
+  }
+
+  .heading-serif {
+    @apply font-serif text-4xl leading-tight text-white md:text-5xl lg:text-6xl;
+  }
+}
