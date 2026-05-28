@@ -74,7 +74,7 @@ export function ImageUploadField({ imageUrl, onImageUrlChange }: Props) {
         <p className="text-sm text-white/80">
           {uploading ? "Uploading..." : "Click to upload an image"}
         </p>
-        <p className="mt-2 text-xs text-cyan-muted">PNG, JPG, WEBP up to 5MB</p>
+        <p className="mt-2 text-xs text-cyan-muted">PNG, JPG, WEBP up to 4MB</p>
       </div>
 
       <label className="block">
