@@ -149,8 +149,11 @@ async function ensureTokenApproval(
 ) {
   const token = new Contract(tokenId);
   const server = new rpc.Server(RPC_URL, { allowHttp: true });
-  const account = await server.getAccount(owner);
-  const expiration = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
+  const [account, latestLedger] = await Promise.all([
+    server.getAccount(owner),
+    server.getLatestLedger(),
+  ]);
+  const expirationLedger = latestLedger.sequence + 100_000;
 
   let tx = new TransactionBuilder(account, {
     fee: "1000000",
@@ -159,9 +162,10 @@ async function ensureTokenApproval(
     .addOperation(
       token.call(
         "approve",
+        new Address(owner).toScVal(),
         new Address(spender).toScVal(),
         nativeToScVal(amount, { type: "i128" }),
-        nativeToScVal(expiration, { type: "u32" }),
+        nativeToScVal(expirationLedger, { type: "u32" }),
       ),
     )
     .setTimeout(300)
