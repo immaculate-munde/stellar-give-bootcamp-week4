@@ -16,7 +16,12 @@ const faqs = [
   {
     question: "Which wallets are supported?",
     answer:
-      "AuctionWithMe supports multiple Stellar wallets through Stellar Wallets Kit. Click Connect Wallet to choose from Freighter, Albedo, xBull, Rabet, LOBSTR, Hana, and others. MetaMask is not supported because this app runs on Stellar, not Ethereum.",
+      "On desktop: Freighter, Albedo, xBull, LOBSTR, Hana, and others from the Connect Wallet picker. On mobile, browser extensions like Freighter are not detected — use WalletConnect (opens the Freighter app), Albedo (web wallet), or xBull (mobile app). MetaMask is not supported because this app runs on Stellar, not Ethereum.",
+  },
+  {
+    question: "Why does Freighter say “Install” on my phone?",
+    answer:
+      "The Freighter browser extension only works on desktop Chrome/Firefox. Having the Freighter app installed on your phone is not enough for a normal mobile browser. Tap Connect Wallet, then choose WalletConnect and select Freighter to open your app, or use Albedo or xBull which work directly on mobile.",
   },
   {
     question: "Is MetaMask supported?",

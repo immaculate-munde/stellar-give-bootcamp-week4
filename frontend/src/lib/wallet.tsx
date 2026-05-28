@@ -10,7 +10,6 @@ import {
   type ReactNode,
 } from "react";
 import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit/sdk";
-import { defaultModules } from "@creit.tech/stellar-wallets-kit/modules/utils";
 import {
   KitEventType,
   Networks,
@@ -18,6 +17,7 @@ import {
 } from "@creit.tech/stellar-wallets-kit/types";
 import { NETWORK_PASSPHRASE } from "./config";
 import { formatError } from "./errors";
+import { buildWalletModules, walletModalOptions } from "./wallets";
 
 type WalletContextValue = {
   address: string | null;
@@ -36,13 +36,10 @@ let kitInitialized = false;
 function initKit() {
   if (kitInitialized || typeof window === "undefined") return;
   StellarWalletsKit.init({
-    modules: defaultModules(),
+    modules: buildWalletModules(),
     network: Networks.TESTNET,
     theme: SwkAppDarkTheme,
-    authModal: {
-      showInstallLabel: true,
-      hideUnsupportedWallets: false,
-    },
+    authModal: walletModalOptions(),
   });
   kitInitialized = true;
 }
