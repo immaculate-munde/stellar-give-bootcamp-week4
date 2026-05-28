@@ -19,6 +19,7 @@ import {
   parseTokenAmount,
   shortenAddress,
 } from "@/lib/utils";
+import { formatError } from "@/lib/errors";
 import { useWallet } from "@/lib/wallet";
 import { CountdownTimer } from "./CountdownTimer";
 
@@ -64,7 +65,7 @@ export function AuctionDetailView({
       setMessage(`${label} successful`);
       await onRefresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Action failed");
+      setMessage(formatError(error));
     } finally {
       setLoading(null);
     }

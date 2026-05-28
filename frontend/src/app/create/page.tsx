@@ -11,6 +11,7 @@ import {
   fetchXlmRates,
   FiatCurrency,
 } from "@/lib/currency";
+import { formatError } from "@/lib/errors";
 import { normalizeImageUrl, validateImageUrl } from "@/lib/imageUrl";
 import { parseTokenAmount } from "@/lib/utils";
 import { useWallet } from "@/lib/wallet";
@@ -114,7 +115,7 @@ export default function CreateAuctionPage() {
       router.push(`/auctions/${auctionId}`);
       return;
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Creation failed");
+      setMessage(formatError(error));
     } finally {
       setLoading(false);
     }

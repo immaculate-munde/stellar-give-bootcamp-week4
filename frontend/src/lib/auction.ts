@@ -12,6 +12,7 @@ import {
   RPC_URL,
   TOKEN_DECIMALS,
 } from "./config";
+import { formatError } from "./errors";
 
 export type AuctionView = {
   id: number;
@@ -96,6 +97,30 @@ export async function fetchPendingRefund(
 
 type SignFn = (xdr: string) => Promise<string>;
 
+async function waitForTransaction(hash: string) {
+  const server = new rpc.Server(RPC_URL, { allowHttp: true });
+
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    const tx = await server.getTransaction(hash);
+
+    if (tx.status === rpc.Api.GetTransactionStatus.SUCCESS) {
+      return tx;
+    }
+
+    if (tx.status === rpc.Api.GetTransactionStatus.FAILED) {
+      throw new Error(
+        "On-chain transaction failed. Check your wallet balance and try again.",
+      );
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+
+  throw new Error(
+    "Transaction is still pending. Wait a moment and refresh the page.",
+  );
+}
+
 async function signAndSendAssembled(
   assembled: {
     signAndSend: (opts?: {
@@ -104,11 +129,15 @@ async function signAndSendAssembled(
   },
   signTransaction: SignFn,
 ) {
-  return assembled.signAndSend({
-    signTransaction: async (xdr) => ({
-      signedTxXdr: await signTransaction(xdr),
-    }),
-  });
+  try {
+    return await assembled.signAndSend({
+      signTransaction: async (xdr) => ({
+        signedTxXdr: await signTransaction(xdr),
+      }),
+    });
+  } catch (error) {
+    throw new Error(formatError(error));
+  }
 }
 
 async function ensureTokenApproval(
@@ -123,7 +152,7 @@ async function ensureTokenApproval(
   const account = await server.getAccount(owner);
   const expiration = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
 
-  const tx = new TransactionBuilder(account, {
+  let tx = new TransactionBuilder(account, {
     fee: "1000000",
     networkPassphrase: NETWORK_PASSPHRASE,
   })
@@ -138,12 +167,22 @@ async function ensureTokenApproval(
     .setTimeout(300)
     .build();
 
+  const simulated = await server.simulateTransaction(tx);
+  if (rpc.Api.isSimulationError(simulated)) {
+    throw new Error(`Token approval simulation failed: ${simulated.error}`);
+  }
+
+  tx = rpc.assembleTransaction(tx, simulated).build();
+
   const signedXdr = await signTransaction(tx.toXDR());
   const response = await server.sendTransaction(
     TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE),
   );
   if (response.status === "ERROR") {
     throw new Error(response.errorResult?.toString() ?? "Approval failed");
+  }
+  if (response.hash) {
+    await waitForTransaction(response.hash);
   }
 }
 

@@ -17,6 +17,7 @@ import {
   SwkAppDarkTheme,
 } from "@creit.tech/stellar-wallets-kit/types";
 import { NETWORK_PASSPHRASE } from "./config";
+import { formatError } from "./errors";
 
 type WalletContextValue = {
   address: string | null;
@@ -114,15 +115,25 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const signAndSend = useCallback(
     async (xdr: string) => {
       initKit();
-      const activeAddress =
-        address ?? (await StellarWalletsKit.getAddress()).address;
+      try {
+        const activeAddress =
+          address ?? (await StellarWalletsKit.getAddress()).address;
 
-      const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, {
-        networkPassphrase: NETWORK_PASSPHRASE,
-        address: activeAddress,
-      });
+        const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, {
+          networkPassphrase: NETWORK_PASSPHRASE,
+          address: activeAddress,
+        });
 
-      return signedTxXdr;
+        if (!signedTxXdr) {
+          throw new Error(
+            "Wallet did not return a signed transaction. Approve the prompt and try again.",
+          );
+        }
+
+        return signedTxXdr;
+      } catch (error) {
+        throw new Error(formatError(error));
+      }
     },
     [address],
   );
