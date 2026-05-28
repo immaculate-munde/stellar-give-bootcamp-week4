@@ -2,12 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+[data-theme="dark"] {
   --background: #0b1120;
   --foreground: #e8f4ff;
+  --heading: #ffffff;
+  --muted: rgba(232, 244, 255, 0.65);
+  --card: #111827;
+  --panel: rgba(17, 24, 39, 0.85);
+  --border: rgba(102, 194, 255, 0.15);
+  --header-bg: rgba(11, 17, 32, 0.95);
   --accent: #66c2ff;
   --accent-muted: rgba(102, 194, 255, 0.6);
-  --card: #111827;
+  --btn-primary-text: #0b1120;
+  --hero-overlay-from: rgba(11, 17, 32, 0.95);
+  --hero-overlay-via: rgba(11, 17, 32, 0.75);
+  --hero-overlay-to: rgba(11, 17, 32, 0.3);
+}
+
+[data-theme="light"] {
+  --background: #f9f7f2;
+  --foreground: #2d2926;
+  --heading: #1a1614;
+  --muted: rgba(45, 41, 38, 0.65);
+  --card: #ffffff;
+  --panel: #ffffff;
+  --border: rgba(26, 22, 20, 0.12);
+  --header-bg: rgba(249, 247, 242, 0.95);
+  --accent: #2b7cb8;
+  --accent-muted: rgba(43, 124, 184, 0.75);
+  --btn-primary-text: #ffffff;
+  --hero-overlay-from: rgba(249, 247, 242, 0.92);
+  --hero-overlay-via: rgba(249, 247, 242, 0.78);
+  --hero-overlay-to: rgba(249, 247, 242, 0.35);
 }
 
 * {
@@ -22,22 +49,98 @@ body {
   color: var(--foreground);
   background: var(--background);
   min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 @layer components {
+  .theme-bg {
+    background-color: var(--background);
+  }
+
+  .theme-text {
+    color: var(--foreground);
+  }
+
+  .theme-heading {
+    color: var(--heading);
+  }
+
+  .theme-muted {
+    color: var(--muted);
+  }
+
+  .theme-card {
+    background-color: var(--card);
+  }
+
+  .theme-panel {
+    background-color: var(--panel);
+  }
+
+  .theme-border {
+    border-color: var(--border);
+  }
+
+  .theme-header {
+    background-color: var(--header-bg);
+    border-color: var(--border);
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center bg-cyan px-8 py-3 text-sm font-medium uppercase tracking-[0.2em] text-navy transition hover:bg-cyan-bright;
+    @apply inline-flex items-center justify-center px-8 py-3 text-sm font-medium uppercase tracking-[0.2em] transition;
+    background-color: var(--accent);
+    color: var(--btn-primary-text);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center border border-cyan/60 px-8 py-3 text-sm font-medium uppercase tracking-[0.2em] text-cyan transition hover:border-cyan hover:bg-cyan/10;
+    @apply inline-flex items-center justify-center border px-8 py-3 text-sm font-medium uppercase tracking-[0.2em] transition;
+    border-color: var(--border);
+    color: var(--accent);
+  }
+
+  .btn-ghost:hover {
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-color: var(--accent);
   }
 
   .section-label {
-    @apply text-xs uppercase tracking-[0.35em] text-cyan-muted;
+    @apply text-xs uppercase tracking-[0.35em];
+    color: var(--accent-muted);
   }
 
   .heading-serif {
-    @apply font-serif text-4xl leading-tight text-white md:text-5xl lg:text-6xl;
+    @apply font-serif text-4xl leading-tight md:text-5xl lg:text-6xl;
+    color: var(--heading);
+  }
+
+  .nav-link {
+    @apply text-xs uppercase tracking-[0.25em] transition;
+    color: color-mix(in srgb, var(--foreground) 85%, transparent);
+  }
+
+  .nav-link:hover {
+    color: var(--accent);
+  }
+
+  .hero-overlay-r {
+    background: linear-gradient(
+      to right,
+      var(--hero-overlay-from),
+      var(--hero-overlay-via),
+      var(--hero-overlay-to)
+    );
+  }
+
+  .hero-overlay-t {
+    background: linear-gradient(
+      to top,
+      var(--background),
+      color-mix(in srgb, var(--background) 40%, transparent),
+      transparent
+    );
   }
 }

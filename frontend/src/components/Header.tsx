@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { WalletButton } from "./WalletButton";
+import { ThemeToggle } from "./ThemeToggle";
 
 const leftNav = [
   { href: "/auctions", label: "Auctions" },
   { href: "/create", label: "Create" },
+  { href: "/account", label: "My Account" },
   { href: "/#faq", label: "FAQ" },
 ];
 
@@ -16,15 +18,11 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-cyan/10 bg-navy/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b theme-header backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
         <nav className="hidden flex-1 items-center gap-8 lg:flex">
           {leftNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-xs uppercase tracking-[0.25em] text-white/80 transition hover:text-cyan"
-            >
+            <Link key={item.href} href={item.href} className="nav-link">
               {item.label}
             </Link>
           ))}
@@ -39,37 +37,37 @@ export function Header() {
           </span>
         </Link>
 
-        <div className="hidden flex-1 items-center justify-end gap-6 lg:flex">
+        <div className="hidden flex-1 items-center justify-end gap-4 lg:flex">
           {rightNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-xs uppercase tracking-[0.25em] text-white/80 transition hover:text-cyan"
-            >
+            <Link key={item.href} href={item.href} className="nav-link">
               {item.label}
             </Link>
           ))}
+          <ThemeToggle />
           <WalletButton />
         </div>
 
-        <button
-          type="button"
-          className="ml-4 inline-flex h-10 w-10 items-center justify-center border border-cyan/40 text-cyan lg:hidden"
-          onClick={() => setOpen((value) => !value)}
-          aria-label="Toggle menu"
-        >
-          <span className="text-xl">{open ? "×" : "≡"}</span>
-        </button>
+        <div className="flex items-center gap-3 lg:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center border theme-border text-cyan"
+            onClick={() => setOpen((value) => !value)}
+            aria-label="Toggle menu"
+          >
+            <span className="text-xl">{open ? "×" : "≡"}</span>
+          </button>
+        </div>
       </div>
 
       {open && (
-        <div className="border-t border-cyan/10 px-6 py-6 lg:hidden">
+        <div className="border-t theme-border px-6 py-6 lg:hidden">
           <nav className="flex flex-col gap-4">
             {[...leftNav, ...rightNav].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm uppercase tracking-[0.25em] text-white/80"
+                className="nav-link text-sm"
                 onClick={() => setOpen(false)}
               >
                 {item.label}

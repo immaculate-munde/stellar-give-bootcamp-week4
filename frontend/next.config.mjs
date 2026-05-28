@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ["@creit.tech/stellar-wallets-kit"],
   images: {
     remotePatterns: [
       {

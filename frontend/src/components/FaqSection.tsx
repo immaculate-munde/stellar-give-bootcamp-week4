@@ -24,9 +24,14 @@ const faqs = [
       "No. MetaMask is for Ethereum and EVM chains. AuctionWithMe uses Stellar Soroban smart contracts. Connect with a Stellar wallet such as Freighter, Albedo, or xBull from the wallet picker in the header.",
   },
   {
-    question: "Can I edit an auction after creating it?",
+    question: "Do I need to sign up with email or a password?",
     answer:
-      "No. Once created, the listing details and escrowed prize amount are stored on-chain and cannot be changed. Double-check your title, image, prize value, and minimum bid before submitting. If no one has bid yet, you can cancel the auction from its detail page to recover your escrowed prize.",
+      "No. AuctionWithMe has no traditional accounts. Connect your Stellar wallet — that is your login. Visit My Account to see items you listed, active bids, won auctions, and any pending refunds tied to your wallet address on-chain.",
+  },
+  {
+    question: "Can I edit or delete an auction after creating it?",
+    answer:
+      "You cannot edit an auction after it is created — the title, image, description, and prize amount are locked on-chain and cannot be changed. However, you can delete (cancel) your auction if no one has placed a bid yet. Go to the auction detail page and use Cancel Auction to recover your escrowed prize. Once the first bid is placed, deletion is no longer possible and the auction must run until the deadline.",
   },
   {
     question: "What happens after I create an auction?",
@@ -41,7 +46,7 @@ const faqs = [
   {
     question: "Can I cancel an auction after creating it?",
     answer:
-      "You can cancel only if no bids have been placed yet. Once someone bids, the auction must run until the deadline and then be finalized. If there are no bids when the deadline passes, the seller can finalize to recover the escrowed prize token.",
+      "Yes, but only before anyone bids. If no bids have been placed, you can delete the listing from its detail page using Cancel Auction — your escrowed prize is returned to your wallet. After the first bid, the auction cannot be deleted and must continue until the deadline, then be finalized.",
   },
 ];
 
@@ -49,31 +54,31 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="border-t border-cyan/10 bg-navy-deep">
+    <section id="faq" className="border-t theme-border theme-bg">
       <div className="mx-auto max-w-4xl px-6 py-20 lg:px-10 lg:py-28">
         <div className="mb-12 text-center">
           <p className="section-label mb-4">Questions</p>
-          <h2 className="font-serif text-4xl text-white md:text-5xl">
+          <h2 className="font-serif text-4xl theme-heading md:text-5xl">
             Frequently Asked
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-white/65">
+          <p className="mx-auto mt-4 max-w-2xl theme-muted">
             Everything you need to know before listing or bidding on
             AuctionWithMe.
           </p>
         </div>
 
-        <div className="divide-y divide-cyan/10 border border-cyan/10">
+        <div className="divide-y theme-border border theme-border">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <div key={faq.question}>
                 <button
                   type="button"
-                  className="flex w-full items-start justify-between gap-6 px-6 py-6 text-left transition hover:bg-navy-card/50 md:px-8"
+                  className="flex w-full items-start justify-between gap-6 px-6 py-6 text-left transition hover:bg-cyan/5 md:px-8"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   aria-expanded={isOpen}
                 >
-                  <span className="font-serif text-lg text-white md:text-xl">
+                  <span className="font-serif text-lg theme-heading md:text-xl">
                     {faq.question}
                   </span>
                   <span
@@ -87,7 +92,7 @@ export function FaqSection() {
                 </button>
                 {isOpen && (
                   <div className="px-6 pb-6 md:px-8">
-                    <p className="leading-7 text-white/70">{faq.answer}</p>
+                    <p className="leading-7 theme-muted">{faq.answer}</p>
                   </div>
                 )}
               </div>

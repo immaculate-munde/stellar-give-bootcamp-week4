@@ -6,6 +6,7 @@ const quickLinks = [
   { href: "/", label: "Home" },
   { href: "/auctions", label: "Browse Auctions" },
   { href: "/create", label: "Create Auction" },
+  { href: "/account", label: "My Account" },
   { href: "/#faq", label: "FAQ" },
 ];
 
@@ -36,7 +37,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-cyan/10 bg-navy-deep">
+    <footer className="border-t theme-border theme-bg">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -45,7 +46,7 @@ export function Footer() {
                 AuctionWithMe
               </span>
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-7 text-white/60">
+            <p className="mt-4 max-w-xs text-sm leading-7 theme-muted">
               No-loss auctions on Stellar. Bid with confidence — outbid
               participants are refunded automatically.
             </p>
@@ -63,7 +64,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 transition hover:text-cyan"
+                    className="text-sm theme-muted transition hover:text-cyan"
                   >
                     {link.label}
                   </Link>
@@ -81,7 +82,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 transition hover:text-cyan"
+                    className="text-sm theme-muted transition hover:text-cyan"
                   >
                     {link.label}
                   </Link>
@@ -101,7 +102,7 @@ export function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-white/70 transition hover:text-cyan"
+                    className="text-sm theme-muted transition hover:text-cyan"
                   >
                     {link.label}
                   </a>
@@ -111,12 +112,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-cyan/10 pt-8 md:flex-row md:items-center md:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t theme-border pt-8 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
-            <p className="text-xs text-white/50">
+            <p className="text-xs theme-muted">
               © {year} AuctionWithMe. All rights reserved.
             </p>
-            <p className="text-xs text-white/50">
+            <p className="text-xs theme-muted">
               An{" "}
               <a
                 href="https://mundeimmaculate.vercel.app"
@@ -129,7 +130,7 @@ export function Footer() {
               Creation
             </p>
           </div>
-          <p className="text-xs text-white/50">
+          <p className="text-xs theme-muted">
             Contract:{" "}
             <span className="font-mono text-cyan-muted">
               {shortenAddress(CONTRACT_ID, 8)}

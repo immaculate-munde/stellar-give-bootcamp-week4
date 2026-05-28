@@ -31,8 +31,8 @@ export function HeroFeaturedAuction({
         sizes="100vw"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/75 to-navy/30" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
+      <div className="absolute inset-0 hero-overlay-r" />
+      <div className="absolute inset-0 hero-overlay-t" />
 
       <div className="relative mx-auto flex min-h-[85vh] max-w-7xl items-center px-6 py-24 lg:px-10">
         <div className="max-w-2xl animate-fade-up">
@@ -42,7 +42,7 @@ export function HeroFeaturedAuction({
                 {live ? "Featured Live Auction" : "Featured Auction"}
               </p>
               <h1 className="heading-serif drop-shadow-lg">{auction.title}</h1>
-              <p className="mt-6 max-w-xl text-base leading-7 text-white/90 drop-shadow-md">
+              <p className="mt-6 max-w-xl text-base leading-7 theme-muted drop-shadow-md">
                 {auction.description}
               </p>
               <div className="mt-8 space-y-3">
@@ -69,7 +69,7 @@ export function HeroFeaturedAuction({
                 Bid with confidence.
                 <span className="block text-cyan">Never lose your stake.</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-7 text-white/90 drop-shadow-md">
+              <p className="mt-6 max-w-xl text-base leading-7 theme-muted drop-shadow-md">
                 AuctionWithMe brings trusted auction experiences to Stellar.
                 Outbid participants are refunded automatically — or claim
                 manually anytime.

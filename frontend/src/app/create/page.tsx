@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { CurrencyAmountField } from "@/components/CurrencyAmountField";
 import { ImageUploadField } from "@/components/ImageUploadField";
-import { createAuction, TOKEN_DECIMALS } from "@/lib/auction";
+import { AuctionLifecycleGuide } from "@/components/AuctionLifecycleGuide";
+import { createAuction, fetchAuctionCount, TOKEN_DECIMALS } from "@/lib/auction";
 import { BID_TOKEN, PRIZE_TOKEN } from "@/lib/config";
 import {
   convertLocalToXlm,
@@ -12,8 +13,10 @@ import {
 } from "@/lib/currency";
 import { parseTokenAmount } from "@/lib/utils";
 import { useWallet } from "@/lib/wallet";
+import { useRouter } from "next/navigation";
 
 export default function CreateAuctionPage() {
+  const router = useRouter();
   const { address, connect, signAndSend } = useWallet();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -104,15 +107,9 @@ export default function CreateAuctionPage() {
         signAndSend,
       );
 
-      setMessage("Auction created successfully");
-      setForm((current) => ({
-        ...current,
-        title: "",
-        description: "",
-        imageUrl: "",
-        prizeAmount: "10000",
-        minBidAmount: "1000",
-      }));
+      const auctionId = await fetchAuctionCount();
+      router.push(`/auctions/${auctionId}`);
+      return;
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Creation failed");
     } finally {
@@ -132,6 +129,8 @@ export default function CreateAuctionPage() {
           convert it to XLM for on-chain escrow. Bidders also pay in XLM.
         </p>
       </div>
+
+      <AuctionLifecycleGuide />
 
       <form
         onSubmit={handleSubmit}

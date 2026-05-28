@@ -32,9 +32,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('auctionwithme-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');document.documentElement.classList.toggle('dark',t!=='light');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
-        className={`${montserrat.variable} ${playfair.variable} ${spaceGrotesk.variable} bg-navy font-sans antialiased`}
+        className={`${montserrat.variable} ${playfair.variable} ${spaceGrotesk.variable} theme-bg font-sans antialiased`}
       >
         <AppProviders>
           <Header />
