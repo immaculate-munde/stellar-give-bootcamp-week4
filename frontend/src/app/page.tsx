@@ -1,6 +1,6 @@
 "use client";
 
-import { HeroFeaturedAuction } from "@/components/HeroFeaturedAuction";
+import { FeaturedAuctionBanner, MarketingHero } from "@/components/HeroFeaturedAuction";
 import { AuctionGrid, StatsBar } from "@/components/AuctionGrid";
 import { FaqSection } from "@/components/FaqSection";
 import { useAuctions } from "@/hooks/useAuctions";
@@ -16,7 +16,8 @@ export default function HomePage() {
 
   return (
     <>
-      <HeroFeaturedAuction auction={featured} />
+      <MarketingHero />
+      <FeaturedAuctionBanner auction={featured} />
       <StatsBar auctions={auctions} />
 
       <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
