@@ -32,9 +32,7 @@ export function CurrencyAmountField({
 
   return (
     <div className="space-y-3">
-      <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
-        {label}
-      </span>
+      <span className="section-label block">{label}</span>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-[140px_1fr]">
         <select
@@ -42,7 +40,7 @@ export function CurrencyAmountField({
           onChange={(event) =>
             onCurrencyChange(event.target.value as FiatCurrency)
           }
-          className="border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
+          className="theme-input"
         >
           {CURRENCY_OPTIONS.map((option) => (
             <option key={option.code} value={option.code}>
@@ -59,21 +57,21 @@ export function CurrencyAmountField({
           value={amount}
           onChange={(event) => onAmountChange(event.target.value)}
           placeholder={currency === "XLM" ? "10" : "5000"}
-          className="border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
+          className="theme-input"
         />
       </div>
 
-      <div className="rounded border border-cyan/15 bg-navy/60 px-4 py-3">
-        <p className="text-xs uppercase tracking-[0.2em] text-cyan-muted">
+      <div className="theme-panel-box rounded px-4 py-3">
+        <p className="section-label">
           Equivalent on-chain (XLM)
         </p>
-        <p className="mt-2 font-serif text-2xl text-cyan">
+        <p className="mt-2 font-serif text-2xl text-accent">
           {ratesLoading && currency !== "XLM"
             ? "Loading rate..."
             : `${formatXlmEquivalent(xlmEquivalent)} XLM`}
         </p>
         {currency !== "XLM" && rate && !ratesLoading && (
-          <p className="mt-1 text-xs text-white/50">
+          <p className="mt-1 text-xs text-subtle">
             1 XLM ≈ {rate.toLocaleString(undefined, { maximumFractionDigits: 4 })}{" "}
             {currency}
           </p>
