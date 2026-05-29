@@ -14,6 +14,11 @@ const faqs = [
       "In a no-loss auction, your bid is held in the contract — not lost forever if someone outbids you. When a higher bid is placed, the previous highest bidder is refunded automatically. If an automatic refund ever fails, you can claim your refund manually from the auction page.",
   },
   {
+    question: "Where are auction photos stored?",
+    answer:
+      "When you upload through the create form, images are saved to Vercel Blob storage (permanent cloud storage tied to the app) when BLOB_READ_WRITE_TOKEN is configured on the server. That permanent URL is what gets written to the Stellar contract. Pasted URLs must be permanent direct links — temporary hosts expire and the listing will show “Image unavailable”.",
+  },
+  {
     question: "Which wallets are supported?",
     answer:
       "On desktop: Freighter, Albedo, xBull, LOBSTR, Hana, and others from the Connect Wallet picker. On mobile, browser extensions like Freighter are not detected — use WalletConnect (opens the Freighter app), Albedo (web wallet), or xBull (mobile app). MetaMask is not supported because this app runs on Stellar, not Ethereum.",
