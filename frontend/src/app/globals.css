@@ -25,16 +25,17 @@
 [data-theme="light"] {
   --background: #f9f7f2;
   --foreground: #2d2926;
-  --heading: #1a1614;
+  --heading: #121110;
   --muted: rgba(45, 41, 38, 0.78);
   --card: #ffffff;
   --panel: #ffffff;
   --border: rgba(26, 22, 20, 0.12);
   --header-bg: rgba(249, 247, 242, 0.95);
   --accent: #2b7cb8;
-  --accent-muted: rgba(43, 124, 184, 0.9);
+  --accent-muted: #1e5a8a;
   --section-eyebrow: #1e5a8a;
-  --heading: #121110;
+  --btn-primary-text: #ffffff;
+  --hero-overlay-from: rgba(249, 247, 242, 0.98);
   --hero-overlay-via: rgba(249, 247, 242, 0.72);
   --hero-overlay-to: rgba(249, 247, 242, 0.35);
   --hero-image-filter: none;
@@ -116,9 +117,23 @@ body {
     color: var(--accent-muted);
   }
 
+  [data-theme="light"] .page-section-header .section-label,
+  [data-theme="light"] .hero-copy .section-label {
+    font-weight: 600;
+    color: var(--section-eyebrow);
+  }
+
   .heading-serif {
-    @apply font-serif text-4xl leading-tight md:text-5xl lg:text-6xl;
+    @apply font-serif text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl;
     color: var(--heading);
+  }
+
+  .page-section {
+    background-color: var(--background);
+  }
+
+  .page-section-header .heading-serif {
+    @apply text-4xl md:text-5xl;
   }
 
   .nav-link {
