@@ -21,10 +21,10 @@ export function AuctionLifecycleGuide() {
   ];
 
   return (
-    <div className="mb-10 space-y-6 border border-cyan/10 bg-navy-card/60 p-6 md:p-8">
+    <div className="theme-panel-box mb-10 space-y-6 p-6 md:p-8">
       <div>
         <p className="section-label mb-3">How it works</p>
-        <h2 className="font-serif text-2xl text-white md:text-3xl">
+        <h2 className="font-serif text-2xl theme-heading md:text-3xl">
           After you create an auction
         </h2>
       </div>
@@ -33,24 +33,24 @@ export function AuctionLifecycleGuide() {
         {steps.map((step) => (
           <div
             key={step.title}
-            className="border border-cyan/10 bg-navy p-4"
+            className="theme-panel-box border p-4"
           >
-            <h3 className="text-sm uppercase tracking-[0.2em] text-cyan">
+            <h3 className="text-sm uppercase tracking-[0.2em] text-accent">
               {step.title}
             </h3>
-            <p className="mt-3 text-sm leading-6 text-white/70">{step.body}</p>
+            <p className="mt-3 text-sm leading-6 text-subtle">{step.body}</p>
           </div>
         ))}
       </div>
 
       <div>
-        <h3 className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+        <h3 className="section-label">
           Edit, cancel & delete
         </h3>
-        <ul className="mt-4 space-y-2 text-sm leading-6 text-white/70">
+        <ul className="mt-4 space-y-2 text-sm leading-6 text-subtle">
           {rules.map((rule) => (
             <li key={rule} className="flex gap-2">
-              <span className="text-cyan">•</span>
+              <span className="text-accent">•</span>
               <span>{rule}</span>
             </li>
           ))}
