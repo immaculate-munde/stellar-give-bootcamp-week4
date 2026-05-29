@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { AuctionImage } from "./AuctionImage";
 import {
   AuctionView,
   cancelAuction,
@@ -123,34 +123,29 @@ export function AuctionDetailView({
     <section className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-20">
       <Link
         href="/auctions"
-        className="text-xs uppercase tracking-[0.25em] text-cyan-muted transition hover:text-cyan"
+        className="text-xs uppercase tracking-[0.25em] text-subtle transition hover:text-accent"
       >
         ← Back to auctions
       </Link>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:gap-16">
-        <div className="relative min-h-[520px] overflow-hidden border border-cyan/10 bg-navy-card">
-          <Image
-            src={
-              auction.imageUrl ||
-              "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1200&q=80"
-            }
+        <div className="relative min-h-[520px] overflow-hidden border border-theme theme-card">
+          <AuctionImage
+            src={auction.imageUrl}
             alt={auction.title}
-            fill
-            className="object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             priority
-            unoptimized
           />
         </div>
 
         <div className="flex flex-col justify-center">
           <p className="section-label mb-4">{auctionStatusLabel(auction.status)}</p>
-          <h1 className="font-serif text-4xl text-white md:text-5xl">
+          <h1 className="font-serif text-4xl theme-heading md:text-5xl">
             {auction.title}
           </h1>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+            <span className="section-label">
               View amounts in
             </span>
             <select
@@ -158,7 +153,7 @@ export function AuctionDetailView({
               onChange={(event) =>
                 setBidCurrency(event.target.value as FiatCurrency)
               }
-              className="border border-cyan/20 bg-navy-card px-3 py-2 text-sm text-white outline-none focus:border-cyan"
+              className="theme-input px-3 py-2 text-sm"
             >
               {CURRENCY_OPTIONS.map((option) => (
                 <option key={option.code} value={option.code}>
@@ -168,19 +163,19 @@ export function AuctionDetailView({
             </select>
           </div>
 
-          <p className="mt-6 font-serif text-3xl text-cyan md:text-4xl">
+          <p className="mt-6 font-serif text-3xl text-accent md:text-4xl">
             {formatTokenAmount(currentBidStroops)}{" "}
-            <span className="text-lg uppercase tracking-[0.2em] text-cyan-muted">
+            <span className="text-lg uppercase tracking-[0.2em] text-subtle">
               current bid
             </span>
           </p>
           {!ratesLoading && bidCurrency !== "XLM" && (
-            <p className="mt-2 text-sm text-white/60">
+            <p className="mt-2 text-sm text-subtle">
               ≈ {formatFiatAmount(convertXlmToLocal(currentBidXlm, bidCurrency, rates), bidCurrency)}{" "}
               {bidCurrency}
             </p>
           )}
-          <p className="mt-3 text-sm text-white/60">
+          <p className="mt-3 text-sm text-subtle">
             Prize escrow: {formatTokenAmount(auction.prizeAmount)} XLM
             {!ratesLoading && bidCurrency !== "XLM" && (
               <>
@@ -193,7 +188,7 @@ export function AuctionDetailView({
           </p>
 
           {auction.highestBidder && (
-            <p className="mt-3 text-sm text-white/60">
+            <p className="mt-3 text-sm text-subtle">
               Highest bidder: {shortenAddress(auction.highestBidder, 6)}
             </p>
           )}
@@ -202,19 +197,19 @@ export function AuctionDetailView({
             <CountdownTimer endTime={auction.endTime} />
           </div>
 
-          <div className="mt-10 border-t border-cyan/10 pt-8">
-            <h2 className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+          <div className="mt-10 border-t border-theme pt-8">
+            <h2 className="section-label">
               Description
             </h2>
-            <p className="mt-4 leading-7 text-white/75">{auction.description}</p>
+            <p className="mt-4 leading-7 text-subtle">{auction.description}</p>
           </div>
 
           {address === auction.seller && auction.status === 0 && (
-            <div className="mt-8 border border-cyan/15 bg-navy-card/80 p-5">
-              <h2 className="text-xs uppercase tracking-[0.25em] text-cyan">
+            <div className="theme-panel-box mt-8 p-5">
+              <h2 className="text-xs uppercase tracking-[0.25em] text-accent">
                 Seller controls
               </h2>
-              <p className="mt-3 text-sm leading-6 text-white/70">
+              <p className="mt-3 text-sm leading-6 text-subtle">
                 Listings cannot be edited after creation.{" "}
                 {auction.bidCount === 0
                   ? "You can cancel below to recover your escrowed prize while no bids exist."
@@ -225,11 +220,11 @@ export function AuctionDetailView({
 
           {live && (
             <div className="mt-10 space-y-4">
-              <label className="block text-xs uppercase tracking-[0.25em] text-cyan-muted">
+              <label className="section-label block">
                 Your bid ({bidCurrency})
               </label>
               <div className="grid gap-3 sm:grid-cols-[140px_1fr]">
-                <div className="flex items-center border border-cyan/20 bg-navy-card px-4 py-3 text-sm text-cyan-muted">
+                <div className="theme-input flex items-center text-sm text-subtle">
                   {bidCurrency}
                 </div>
                 <input
@@ -238,20 +233,20 @@ export function AuctionDetailView({
                   step="any"
                   value={bidAmount}
                   onChange={(event) => setBidAmount(event.target.value)}
-                  className="border border-cyan/20 bg-navy-card px-4 py-3 text-white outline-none transition focus:border-cyan"
+                  className="theme-input"
                 />
               </div>
-              <div className="rounded border border-cyan/15 bg-navy/60 px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.2em] text-cyan-muted">
+              <div className="theme-panel-box rounded px-4 py-3">
+                <p className="section-label">
                   Pays on-chain (XLM)
                 </p>
-                <p className="mt-2 font-serif text-xl text-cyan">
+                <p className="mt-2 font-serif text-xl text-accent">
                   {ratesLoading && bidCurrency !== "XLM"
                     ? "Loading rate..."
                     : `${formatXlmEquivalent(bidXlm)} XLM`}
                 </p>
               </div>
-              <p className="text-xs text-cyan-muted">
+              <p className="text-xs text-subtle">
                 Minimum: {formatTokenAmount(minNextBid)} XLM
                 {!ratesLoading && bidCurrency !== "XLM" && (
                   <>
@@ -266,7 +261,7 @@ export function AuctionDetailView({
                 )}
                 {auction.highestBid > 0n ? " — must beat the current high bid" : ""}
               </p>
-              <p className="text-xs text-white/45">
+              <p className="text-xs text-subtle opacity-80">
                 Bids settle in XLM on Stellar. Local amounts use live rates and
                 are approximate.
               </p>
@@ -368,7 +363,7 @@ export function AuctionDetailView({
           </div>
 
           {message && (
-            <p className="mt-6 text-sm text-cyan-muted" role="status">
+            <p className="mt-6 text-sm text-subtle" role="status">
               {message}
             </p>
           )}
