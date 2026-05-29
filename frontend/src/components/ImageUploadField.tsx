@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRef, useState } from "react";
 import { uploadImage } from "@/lib/uploadImage";
 
@@ -37,24 +36,22 @@ export function ImageUploadField({ imageUrl, onImageUrlChange }: Props) {
 
   return (
     <div className="space-y-4">
-      <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
-        Item image
-      </span>
+      <span className="section-label block">Item image</span>
 
       {displayUrl && (
-        <div className="relative mt-3 h-48 w-full overflow-hidden border border-cyan/20 bg-navy">
-          <Image
+        <div className="relative mt-3 h-48 w-full overflow-hidden border border-theme theme-card">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={displayUrl}
             alt="Auction preview"
-            fill
-            className="object-cover"
-            unoptimized
+            className="h-full w-full object-cover"
+            referrerPolicy="no-referrer"
           />
         </div>
       )}
 
       <div
-        className="mt-3 flex cursor-pointer flex-col items-center justify-center border border-dashed border-cyan/30 bg-navy px-6 py-10 transition hover:border-cyan/60 hover:bg-navy-card/50"
+        className="theme-panel-box mt-3 flex cursor-pointer flex-col items-center justify-center border border-dashed px-6 py-10 transition hover:border-accent"
         onClick={() => inputRef.current?.click()}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -71,14 +68,17 @@ export function ImageUploadField({ imageUrl, onImageUrlChange }: Props) {
           className="hidden"
           onChange={(event) => handleFile(event.target.files?.[0] ?? null)}
         />
-        <p className="text-sm text-white/80">
+        <p className="text-sm theme-text">
           {uploading ? "Uploading..." : "Click to upload an image"}
         </p>
-        <p className="mt-2 text-xs text-cyan-muted">PNG, JPG, WEBP up to 4MB</p>
+        <p className="mt-2 text-xs text-subtle">PNG, JPG, WEBP up to 4MB</p>
+        <p className="mt-2 text-center text-xs text-subtle">
+          Uploads are stored permanently when Vercel Blob is configured.
+        </p>
       </div>
 
       <label className="block">
-        <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+        <span className="section-label block">
           Or paste image URL
         </span>
         <input
@@ -86,15 +86,15 @@ export function ImageUploadField({ imageUrl, onImageUrlChange }: Props) {
           value={imageUrl}
           onChange={(event) => onImageUrlChange(event.target.value)}
           placeholder="https://example.com/your-item.jpg"
-          className="mt-3 w-full border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
+          className="theme-input mt-3 w-full"
         />
-        <p className="mt-2 text-xs text-cyan-muted">
-          Must be a direct image link (.jpg, .png, .webp). Google share links
-          will not work — right-click the photo and copy the image address.
+        <p className="mt-2 text-xs text-subtle">
+          Use a permanent direct link (.jpg, .png, .webp). Temporary hosts
+          like tmpfiles.org will stop working.
         </p>
       </label>
 
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }
