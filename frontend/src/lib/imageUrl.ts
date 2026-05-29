@@ -7,6 +7,7 @@ const BLOCKED_HOSTS = [
   "drive.google.com",
   "docs.google.com",
   "goo.gl",
+  "tmpfiles.org",
 ];
 
 export function normalizeImageUrl(url: string): string {
@@ -32,6 +33,9 @@ export function validateImageUrl(url: string): string | null {
 
   const host = parsed.hostname.replace(/^www\./, "");
   if (BLOCKED_HOSTS.some((blocked) => host === blocked || host.endsWith(`.${blocked}`))) {
+    if (host.includes("tmpfiles")) {
+      return "tmpfiles.org links expire quickly and will break on your listing. Upload the image again or use a permanent URL (Imgur, Unsplash, etc.).";
+    }
     return "Google share links do not work. Right-click the image, choose “Copy image address”, and paste that URL instead.";
   }
 
