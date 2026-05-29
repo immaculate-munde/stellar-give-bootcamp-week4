@@ -16,23 +16,24 @@ export function MarketingHero() {
         alt="AuctionWithMe — bid with confidence"
         fill
         priority
-        className="object-cover object-center"
+        className="hero-image object-cover object-center"
         sizes="100vw"
       />
 
-      <div className="absolute inset-0 hero-overlay-r" />
-      <div className="absolute inset-0 hero-overlay-t" />
+      <div className="absolute inset-0 hero-overlay-scrim" aria-hidden />
+      <div className="absolute inset-0 hero-overlay-r" aria-hidden />
+      <div className="absolute inset-0 hero-overlay-t" aria-hidden />
 
       <div className="relative mx-auto flex min-h-[85vh] max-w-7xl items-center px-6 py-24 lg:px-10">
-        <div className="max-w-2xl animate-fade-up">
-          <p className="section-label mb-6 drop-shadow-sm">
+        <div className="hero-copy max-w-2xl animate-fade-up">
+          <p className="section-label mb-6">
             No-Loss Auction Protocol
           </p>
-          <h1 className="heading-serif drop-shadow-lg">
+          <h1 className="heading-serif">
             Bid with confidence.
-            <span className="block text-cyan">Never lose your stake.</span>
+            <span className="hero-accent block">Never lose your stake.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-7 theme-muted drop-shadow-md">
+          <p className="mt-6 max-w-xl text-base leading-7 theme-muted">
             AuctionWithMe brings trusted auction experiences to Stellar. Outbid
             participants are refunded automatically — or claim manually anytime.
           </p>
@@ -40,7 +41,7 @@ export function MarketingHero() {
             <Link href="/auctions" className="btn-primary">
               Browse Auctions
             </Link>
-            <Link href="/create" className="btn-ghost bg-navy/40 backdrop-blur-sm">
+            <Link href="/create" className="btn-ghost hero-ghost-btn backdrop-blur-sm">
               Create Auction
             </Link>
           </div>
@@ -64,26 +65,26 @@ export function FeaturedAuctionBanner({
     auction.highestBid > 0n ? "Current bid" : "Opening bid from";
 
   return (
-    <section className="border-y border-cyan/10 bg-navy-card/80">
+    <section className="border-y border-theme theme-panel-box">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div>
           <p className="section-label mb-3">
             {live ? "Featured live auction" : "Featured auction"}
           </p>
-          <h2 className="font-serif text-2xl text-white md:text-3xl">
+          <h2 className="font-serif text-2xl theme-heading md:text-3xl">
             {auction.title}
           </h2>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-white/65">
+          <p className="mt-2 max-w-xl text-sm leading-6 text-subtle">
             {auction.description}
           </p>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="text-right sm:text-left">
-            <p className="text-xs uppercase tracking-[0.2em] text-cyan-muted">
+            <p className="section-label">
               {bidLabel}
             </p>
-            <p className="mt-1 font-serif text-2xl text-cyan">
+            <p className="mt-1 font-serif text-2xl text-accent">
               {formatTokenAmount(bid)} XLM
             </p>
             <div className="mt-2">
