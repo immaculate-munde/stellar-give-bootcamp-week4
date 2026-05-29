@@ -125,10 +125,10 @@ export default function CreateAuctionPage() {
     <section className="mx-auto max-w-3xl px-6 py-20 lg:px-10">
       <div className="mb-12 text-center">
         <p className="section-label mb-4">List a prize</p>
-        <h1 className="font-serif text-4xl text-white md:text-5xl">
+        <h1 className="font-serif text-4xl theme-heading md:text-5xl">
           Create Auction
         </h1>
-        <p className="mt-4 text-white/65">
+        <p className="mt-4 text-subtle">
           Upload your item photo, set a prize in your local currency, and we
           convert it to XLM for on-chain escrow. Bidders also pay in XLM.
         </p>
@@ -138,10 +138,10 @@ export default function CreateAuctionPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 border border-cyan/10 bg-navy-card p-8 md:p-10"
+        className="space-y-8 theme-panel-box p-8 md:p-10"
       >
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+          <span className="section-label block">
             Title
           </span>
           <input
@@ -151,12 +151,12 @@ export default function CreateAuctionPage() {
             onChange={(event) =>
               setForm((current) => ({ ...current, title: event.target.value }))
             }
-            className="mt-3 w-full border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
+            className="theme-input mt-3 w-full"
           />
         </label>
 
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+          <span className="section-label block">
             Description
           </span>
           <textarea
@@ -169,7 +169,7 @@ export default function CreateAuctionPage() {
                 description: event.target.value,
               }))
             }
-            className="mt-3 w-full border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
+            className="theme-input mt-3 w-full"
           />
         </label>
 
@@ -211,7 +211,7 @@ export default function CreateAuctionPage() {
         />
 
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.25em] text-cyan-muted">
+          <span className="section-label block">
             Duration (hours)
           </span>
           <input
@@ -225,7 +225,7 @@ export default function CreateAuctionPage() {
                 durationHours: event.target.value,
               }))
             }
-            className="mt-3 w-full border border-cyan/20 bg-navy px-4 py-3 text-white outline-none focus:border-cyan"
+            className="theme-input mt-3 w-full"
           />
         </label>
 
@@ -238,7 +238,7 @@ export default function CreateAuctionPage() {
         </button>
 
         {message && (
-          <p className="text-sm text-cyan-muted" role="status">
+          <p className="text-sm text-subtle" role="status">
             {message}
           </p>
         )}
