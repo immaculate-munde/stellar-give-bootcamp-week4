@@ -12,6 +12,7 @@
     "@creit.tech/stellar-wallets-kit": "^2.2.0",
     "@stellar/freighter-api": "^6.0.1",
     "@stellar/stellar-sdk": "^15.1.0",
+    "@vercel/blob": "^2.4.0",
     "next": "14.2.35",
     "no_loss_auction": "file:../packages/no_loss_auction",
     "react": "^18",
