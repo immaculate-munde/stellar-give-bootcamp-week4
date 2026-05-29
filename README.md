@@ -108,6 +108,8 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_NETWORK_PASSPHRASE` | Stellar network passphrase |
 | `NEXT_PUBLIC_BID_TOKEN` | SEP-41 token for bids |
 | `NEXT_PUBLIC_PRIZE_TOKEN` | SEP-41 token for prize escrow |
+| `BLOB_READ_WRITE_TOKEN` | Server-only. Enables permanent image uploads via [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) |
+| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | Optional. WalletConnect for mobile Freighter/LOBSTR |
 
 Default demo tokens use testnet native XLM SAC: `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
 
