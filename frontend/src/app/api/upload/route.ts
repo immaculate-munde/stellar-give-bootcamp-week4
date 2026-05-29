@@ -1,8 +1,25 @@
+import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
 const MAX_FILE_SIZE_MB = 4;
+
+async function uploadToVercelBlob(file: File): Promise<string | null> {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) return null;
+
+  const safeName = file.name.replace(/[^\w.-]+/g, "-").slice(0, 80) || "image";
+  const pathname = `auctions/${Date.now()}-${safeName}`;
+
+  const blob = await put(pathname, file, {
+    access: "public",
+    token,
+    contentType: file.type || "application/octet-stream",
+  });
+
+  return blob.url;
+}
 
 async function uploadToCatbox(file: File): Promise<string | null> {
   const uploadData = new FormData();
@@ -18,29 +35,6 @@ async function uploadToCatbox(file: File): Promise<string | null> {
 
   const url = (await response.text()).trim();
   return url.startsWith("http") ? url : null;
-}
-
-async function uploadToTmpfiles(file: File): Promise<string | null> {
-  const uploadData = new FormData();
-  uploadData.append("file", file);
-
-  const response = await fetch("https://tmpfiles.org/api/v1/upload", {
-    method: "POST",
-    body: uploadData,
-  });
-
-  if (!response.ok) return null;
-
-  const payload = (await response.json()) as {
-    status?: string;
-    data?: { url?: string };
-  };
-
-  const pageUrl = payload.data?.url?.trim();
-  if (!pageUrl?.startsWith("http")) return null;
-
-  // tmpfiles serves images from /dl/... not the HTML preview page.
-  return pageUrl.replace("tmpfiles.org/", "tmpfiles.org/dl/");
 }
 
 async function uploadTo0x0(file: File): Promise<string | null> {
@@ -82,8 +76,8 @@ export async function POST(request: NextRequest) {
     }
 
     const url =
+      (await uploadToVercelBlob(file)) ??
       (await uploadToCatbox(file)) ??
-      (await uploadToTmpfiles(file)) ??
       (await uploadTo0x0(file));
 
     if (!url) {
@@ -96,7 +90,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ url });
+    return NextResponse.json({ url, stored: url.includes("blob.vercel-storage.com") ? "vercel-blob" : "external" });
   } catch {
     return NextResponse.json(
       {
