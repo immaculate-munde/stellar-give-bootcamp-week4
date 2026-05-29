@@ -1,7 +1,7 @@
+import Link from "next/link";
 import { AuctionView } from "@/lib/auction";
 import { formatTokenAmount, isAuctionLive } from "@/lib/utils";
-import Link from "next/link";
-import Image from "next/image";
+import { AuctionImage } from "./AuctionImage";
 
 export function StatsBar({ auctions }: { auctions: AuctionView[] }) {
   const active = auctions.filter((auction) =>
@@ -19,14 +19,14 @@ export function StatsBar({ auctions }: { auctions: AuctionView[] }) {
   ];
 
   return (
-    <section className="border-y border-cyan/10 bg-navy-deep">
+    <section className="border-y border-theme theme-bg">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-10 md:grid-cols-3 lg:px-10">
         {stats.map((stat) => (
           <div key={stat.label} className="text-center md:text-left">
-            <p className="font-display text-3xl text-cyan md:text-4xl">
+            <p className="font-display text-3xl text-accent md:text-4xl">
               {stat.value}
             </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.3em] text-cyan-muted">
+            <p className="mt-2 text-xs uppercase tracking-[0.3em] text-subtle">
               {stat.label}
             </p>
           </div>
@@ -56,17 +56,19 @@ export function AuctionCard({
         featured ? "min-h-[520px]" : "min-h-[320px]"
       }`}
     >
-      <Image
-        src={auction.imageUrl || "/placeholder-auction.jpg"}
-        alt={auction.title}
-        fill
-        className="object-cover transition duration-700 group-hover:scale-105"
-        sizes={featured ? "50vw" : "33vw"}
-        unoptimized
-      />
+      <div className="absolute inset-0">
+        <AuctionImage
+          src={auction.imageUrl}
+          alt={auction.title}
+          className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+          showUnavailableLabel={false}
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
-        <p className="section-label mb-3">{live ? "Live" : "Closed"}</p>
+        <p className="mb-3 text-xs uppercase tracking-[0.35em] text-cyan">
+          {live ? "Live" : "Closed"}
+        </p>
         <h3
           className={`font-serif text-white ${
             featured ? "text-3xl md:text-4xl" : "text-2xl"
@@ -85,9 +87,9 @@ export function AuctionCard({
 export function AuctionGrid({ auctions }: { auctions: AuctionView[] }) {
   if (auctions.length === 0) {
     return (
-      <div className="rounded border border-dashed border-cyan/20 px-8 py-20 text-center">
-        <p className="font-serif text-3xl text-white">No auctions yet</p>
-        <p className="mt-4 text-cyan-muted">
+      <div className="theme-panel-box rounded px-8 py-20 text-center">
+        <p className="heading-serif text-3xl">No auctions yet</p>
+        <p className="mt-4 text-subtle">
           Be the first to list a prize on the no-loss protocol.
         </p>
       </div>
