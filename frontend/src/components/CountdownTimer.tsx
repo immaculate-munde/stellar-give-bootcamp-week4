@@ -26,7 +26,7 @@ export function CountdownTimer({ endTime }: { endTime: bigint }) {
   }, [endTime]);
 
   return (
-    <p className="font-sans text-sm uppercase tracking-[0.25em] text-cyan">
+    <p className="font-sans text-sm uppercase tracking-[0.25em] text-accent">
       {remaining}
     </p>
   );
